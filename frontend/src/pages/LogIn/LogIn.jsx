@@ -18,13 +18,13 @@ const LogIn = () => {
       setError("Email is required");
       return;
     }
-    
+
     // validates email
     if (!validateEmail(email)) {
       setError("Invalid email address");
       return;
     }
-    
+
     // checks if password field is empty
     if (!password) {
       setError("Password is required");
