@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import NoteCard from "../../components/Cards/NoteCard";
 import AddButton from "../../components/Buttons/AddButton";
+import AddEditNotes from "./AddEditNotes";
+import Modal from "react-modal";
 
 const Home = () => {
+  const [openAddEditModal, setOpenAddEditModal] = useState({
+    isShown: false,
+    type: "add",
+    data: null,
+  });
+
   // handles notes pin
   const handlePin = () => {
     console.log("Pin");
@@ -38,7 +46,23 @@ const Home = () => {
         </div>
       </div>
 
-      <AddButton />
+      <AddButton setOpenAddEditModal={setOpenAddEditModal} />
+
+      <Modal
+        isOpen={openAddEditModal.isShown}
+        onRequestClose={() =>
+          setOpenAddEditModal({ ...openAddEditModal, isShown: false })
+        }
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.2)",
+          },
+        }}
+        contentLabel=""
+        className="w-[400px] max-h-3/4 bg-white rounded-md mx-auto mt-14 p-5"
+      >
+        <AddEditNotes />
+      </Modal>
     </>
   );
 };
