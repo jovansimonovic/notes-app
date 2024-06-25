@@ -6,7 +6,6 @@ const NoteCard = ({
   title,
   date,
   content,
-  tags,
   isPinned,
   onEdit,
   onDelete,
@@ -29,15 +28,8 @@ const NoteCard = ({
       <p className="text-sm text-slate-600 mt-2">{content?.slice(0, 60)}</p>
 
       <div className="flex items-center justify-between mt-2">
-        <div className="text-slate-500 text-xs">{tags}</div>
-
-        <div className="flex items-center gap-2">
-          <MdCreate className="icon-btn hover:text-primary" onClick={onEdit} />
-          <MdDelete
-            className="icon-btn hover:text-red-500"
-            onClick={onDelete}
-          />
-        </div>
+        <MdCreate className="icon-btn hover:text-primary" onClick={onEdit} />
+        <MdDelete className="icon-btn hover:text-red-500" onClick={onDelete} />
       </div>
     </div>
   );

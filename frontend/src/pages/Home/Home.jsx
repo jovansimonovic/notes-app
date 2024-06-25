@@ -37,7 +37,6 @@ const Home = () => {
             title="Pick Marjan up at 16:30"
             date="June 24th 2024"
             content="Pick Marjan up at 16:30"
-            tags="#Shopping"
             isPinned={true}
             onPin={handlePin}
             onEdit={handleEdit}

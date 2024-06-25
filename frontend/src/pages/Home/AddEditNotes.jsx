@@ -21,10 +21,6 @@ const AddEditNotes = () => {
           rows={10}
         ></textarea>
 
-        <div className="mt-3">
-          <label className="input-label">Tags</label>
-        </div>
-
         <button className="btn-primary font-medium mt-5 p-3" onClick={() => {}}>
           Create
         </button>
