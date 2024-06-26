@@ -32,7 +32,25 @@ const Home = () => {
       <Navbar />
 
       <div className="container mx-auto">
-        <div className="grid grid-cols-3 gap-4 mt-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 mx-4 gap-4 mt-8">
+          <NoteCard
+            title="Pick Marjan up at 16:30"
+            date="June 24th 2024"
+            content="Pick Marjan up at 16:30"
+            isPinned={true}
+            onPin={handlePin}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+          <NoteCard
+            title="Pick Marjan up at 16:30"
+            date="June 24th 2024"
+            content="Pick Marjan up at 16:30"
+            isPinned={true}
+            onPin={handlePin}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
           <NoteCard
             title="Pick Marjan up at 16:30"
             date="June 24th 2024"
