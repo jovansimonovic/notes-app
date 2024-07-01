@@ -57,7 +57,9 @@ app.post("/create", async (req, res) => {
   const userExists = await User.findOne({ email: email });
 
   if (userExists) {
-    return res.json({ error: true, message: "User already exists" });
+    return res
+      .status(409)
+      .json({ error: true, message: "User already exists" });
   }
 
   const user = new User({
@@ -69,15 +71,60 @@ app.post("/create", async (req, res) => {
   await user.save();
 
   const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "30m",
+    expiresIn: "1h",
   });
 
   return res.json({
     error: false,
+    message: "Registered successfully",
     user,
     accessToken,
-    message: "User registered successfully",
   });
+});
+
+// user login API
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: true, message: "Email is required" });
+  }
+
+  if (!password) {
+    return res
+      .status(400)
+      .json({ error: true, message: "Password is required" });
+  }
+
+  const foundUser = await User.findOne({ email: email });
+
+  if (!foundUser) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  if (foundUser.email === email && foundUser.password === password) {
+    const user = { email: foundUser.email };
+    const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: "1h",
+    });
+
+    return res.json({
+      error: false,
+      message: "Logged in successfully",
+      email,
+      accessToken,
+    });
+  } else {
+    return res
+      .status(401)
+      .json({ error: true, message: "Invalid email or password" });
+  }
+});
+
+// notes create API
+app.post("/create", (req, res) => {
+  // todo: create add notes API
+  // todo: resolve "/create" conflict between user and notes
 });
 
 // starts the server on given port
