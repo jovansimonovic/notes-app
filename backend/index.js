@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 mongoose.connect(config.connectionString);
 
 const User = require("./models/user.model");
+const Note = require("./models/note.model");
 
 const express = require("express");
 const cors = require("cors");
@@ -35,7 +36,7 @@ app.get("/", (req, res) => {
 });
 
 // user create API
-app.post("/create", async (req, res) => {
+app.post("/user/create", async (req, res) => {
   const { username, email, password } = req.body;
 
   if (!username) {
@@ -54,36 +55,42 @@ app.post("/create", async (req, res) => {
       .json({ error: true, message: "Password is required" });
   }
 
-  const userExists = await User.findOne({ email: email });
+  try {
+    const userExists = await User.findOne({ email: email });
 
-  if (userExists) {
+    if (userExists) {
+      return res
+        .status(409)
+        .json({ error: true, message: "User already exists" });
+    }
+
+    const user = new User({
+      username: username,
+      email: email,
+      password: password,
+    });
+
+    await user.save();
+
+    const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: "1h",
+    });
+
+    return res.json({
+      error: false,
+      message: "Registered successfully",
+      user,
+      accessToken,
+    });
+  } catch (error) {
     return res
-      .status(409)
-      .json({ error: true, message: "User already exists" });
+      .status(500)
+      .json({ error: true, message: "Internal Server Error" });
   }
-
-  const user = new User({
-    username: username,
-    email: email,
-    password: password,
-  });
-
-  await user.save();
-
-  const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "1h",
-  });
-
-  return res.json({
-    error: false,
-    message: "Registered successfully",
-    user,
-    accessToken,
-  });
 });
 
 // user login API
-app.post("/login", async (req, res) => {
+app.post("/user/login", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email) {
@@ -122,9 +129,8 @@ app.post("/login", async (req, res) => {
 });
 
 // notes create API
-app.post("/create", (req, res) => {
-  // todo: create add notes API
-  // todo: resolve "/create" conflict between user and notes
+app.post("/note/create", authenticateToken, async (req, res) => {
+  // todo: create add note API
 });
 
 // starts the server on given port
