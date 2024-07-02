@@ -65,9 +65,9 @@ app.post("/user/create", async (req, res) => {
     }
 
     const user = new User({
-      username: username,
-      email: email,
-      password: password,
+      username,
+      email,
+      password,
     });
 
     await user.save();
@@ -110,8 +110,8 @@ app.post("/user/login", async (req, res) => {
   }
 
   if (foundUser.email === email && foundUser.password === password) {
-    const user = { email: foundUser.email };
-    const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
+    const user = { user: foundUser };
+    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: "1h",
     });
 
@@ -128,9 +128,42 @@ app.post("/user/login", async (req, res) => {
   }
 });
 
-// notes create API
+// note create API
 app.post("/note/create", authenticateToken, async (req, res) => {
-  // todo: create add note API
+  const { title, content } = req.body;
+  const { user } = req.user;
+
+  if (!title) {
+    return res.status(400).json({ error: true, message: "Title is required" });
+  }
+
+  if (!content) {
+    return res
+      .status(400)
+      .json({ error: true, message: "Content is required" });
+  }
+
+  try {
+    const note = new Note({
+      title,
+      content,
+      userId: user._id,
+    });
+
+    await note.save();
+
+    return res.status(200).json({
+      error: false,
+      message: "Note created successfully",
+      note,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: true,
+      message: "Internal Server Error",
+    });
+  }
 });
 
 // starts the server on given port
