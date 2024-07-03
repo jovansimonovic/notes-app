@@ -203,6 +203,20 @@ app.put("/note/update/:noteId", authenticateToken, async (req, res) => {
   }
 });
 
+// get all notes by user ID API
+app.get("/note/get-all", authenticateToken, async (req, res) => {
+  const { user } = req.user;
+
+  try {
+    const notes = await Note.find({ userId: user._id }).sort({ isPinned: -1 });
+    return res.status(200).json({ error: false, notes });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: true, message: "Internal Server Error" });
+  }
+});
+
 // starts the server on given port
 app.listen(8000);
 
