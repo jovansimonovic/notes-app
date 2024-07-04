@@ -242,6 +242,35 @@ app.get("/note/get-all", authenticateToken, async (req, res) => {
   }
 });
 
+// pin/unpin note API
+app.put("/note/toggle-pin/:noteId", authenticateToken, async (req, res) => {
+  const noteId = req.params.noteId;
+  const { isPinned } = req.body;
+  const { user } = req.user;
+
+  try {
+    const noteToUpdate = await Note.findOne({ _id: noteId, userId: user._id });
+
+    if (!noteToUpdate) {
+      return res.status(404).json({ error: true, message: "Note not found" });
+    }
+
+    if (isPinned) noteToUpdate.isPinned = isPinned || false;
+
+    await noteToUpdate.save();
+
+    return res.status(200).json({
+      error: false,
+      message: "Note updated successfully",
+      note: noteToUpdate,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: true, message: "Internal Server Error" });
+  }
+});
+
 // starts the server on given port
 app.listen(8000);
 
