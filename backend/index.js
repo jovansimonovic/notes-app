@@ -230,7 +230,7 @@ app.put("/note/toggle-pin/:noteId", authenticateToken, async (req, res) => {
       return res.status(404).json({ error: true, message: "Note not found" });
     }
 
-    if (isPinned) noteToUpdate.isPinned = isPinned || false;
+    noteToUpdate.isPinned = isPinned;
 
     await noteToUpdate.save();
 
