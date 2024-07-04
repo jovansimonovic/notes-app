@@ -128,6 +128,27 @@ app.post("/user/login", async (req, res) => {
   }
 });
 
+// get user API
+app.get("/user/get", authenticateToken, async (req, res) => {
+  const { user } = req.user;
+
+  const foundUser = await User.findOne({ _id: user._id });
+
+  if (!foundUser) {
+    return res.status(404).json({ error: true, message: "User not found" });
+  }
+
+  return res.status(200).json({
+    error: false,
+    user: {
+      _id: foundUser._id,
+      username: foundUser.username,
+      email: foundUser.email,
+      createdAt: foundUser.createdAt,
+    },
+  });
+});
+
 // note create API
 app.post("/note/create", authenticateToken, async (req, res) => {
   const { title, content } = req.body;
