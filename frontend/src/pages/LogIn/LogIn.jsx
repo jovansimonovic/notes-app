@@ -35,7 +35,7 @@ const LogIn = () => {
 
     setError("");
 
-    // login api call
+    // login API call
     try {
       const response = await Axios.post("/user/login", {
         email: email,

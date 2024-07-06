@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import { FiLogOut } from "react-icons/fi";
 
-const Navbar = () => {
+const Navbar = ({ user }) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
   // handles logout request
   const logout = () => {
+    localStorage.removeItem("token");
     navigate("/login");
   };
 
@@ -22,20 +23,24 @@ const Navbar = () => {
     <div className="bg-white flex items-center justify-between px-6 py-2 drop-shadow">
       <h2 className="text-xl font-medium text-black py-2 pr-2">Notes</h2>
 
-      <SearchBar
-        value={searchQuery}
-        onChange={(e) => {
-          setSearchQuery(e.target.value);
-        }}
-        handleSearch={handleSearch}
-      />
+      {user && (
+        <>
+          <SearchBar
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+            }}
+            handleSearch={handleSearch}
+          />
 
-      <div className="flex gap-2">
-        <ProfileInfo />
-        <button className="btn-primary" onClick={logout}>
-          <FiLogOut size={20} />
-        </button>
-      </div>
+          <div className="flex gap-2">
+            <ProfileInfo user={user} />
+            <button className="btn-primary" onClick={logout}>
+              <FiLogOut size={20} />
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

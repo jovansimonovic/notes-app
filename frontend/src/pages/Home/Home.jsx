@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import NoteCard from "../../components/Cards/NoteCard";
 import AddButton from "../../components/Buttons/AddButton";
 import AddEditNotes from "./AddEditNotes";
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
+import Axios from "../../utils/axios";
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -11,6 +13,28 @@ const Home = () => {
     type: "add",
     data: null,
   });
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  // get user API call
+  const getUser = async () => {
+    try {
+      const response = await Axios.get("/user/get");
+
+      if (response.data && response.data.user) {
+        setUser(response.data.user);
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   // handles notes pin
   const handlePin = () => {
@@ -29,7 +53,7 @@ const Home = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar user={user} />
 
       <div className="container mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-3 mx-4 gap-4 mt-8">
