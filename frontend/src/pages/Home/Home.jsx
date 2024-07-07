@@ -6,6 +6,7 @@ import AddEditNotes from "./AddEditNotes";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import Axios from "../../utils/axios";
+import { formatDate } from "../../utils/helper";
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -14,6 +15,7 @@ const Home = () => {
     data: null,
   });
   const [user, setUser] = useState(null);
+  const [notes, setNotes] = useState([]);
   const navigate = useNavigate();
 
   // get user API call
@@ -32,8 +34,22 @@ const Home = () => {
     }
   };
 
+  // get all notes API call
+  const getAllNotes = async () => {
+    try {
+      const response = await Axios.get("/note/get-all");
+
+      if (response.data && response.data.notes) {
+        setNotes(response.data.notes);
+      }
+    } catch (error) {
+      console.log("An error occurred. Please try again");
+    }
+  };
+
   useEffect(() => {
     getUser();
+    getAllNotes();
   }, []);
 
   // handles notes pin
@@ -57,33 +73,18 @@ const Home = () => {
 
       <div className="container mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-3 mx-4 gap-4 mt-8">
-          <NoteCard
-            title="Pick Marjan up at 16:30"
-            date="June 24th 2024"
-            content="Pick Marjan up at 16:30"
-            isPinned={true}
-            onPin={handlePin}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-          <NoteCard
-            title="Pick Marjan up at 16:30"
-            date="June 24th 2024"
-            content="Pick Marjan up at 16:30"
-            isPinned={true}
-            onPin={handlePin}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-          <NoteCard
-            title="Pick Marjan up at 16:30"
-            date="June 24th 2024"
-            content="Pick Marjan up at 16:30"
-            isPinned={true}
-            onPin={handlePin}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
+          {notes.map((note) => (
+            <NoteCard
+              key={note._id}
+              title={note.title}
+              date={formatDate(note.createdAt)}
+              content={note.content}
+              isPinned={note.isPinned}
+              onPin={handlePin}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
         </div>
       </div>
 
