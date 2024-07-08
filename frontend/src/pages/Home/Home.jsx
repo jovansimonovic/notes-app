@@ -91,6 +91,7 @@ const Home = () => {
       <AddButton setOpenAddEditModal={setOpenAddEditModal} />
 
       <Modal
+        appElement={document.getElementById("root")}
         isOpen={openAddEditModal.isShown}
         onRequestClose={() =>
           setOpenAddEditModal({ ...openAddEditModal, isShown: false })
@@ -100,10 +101,20 @@ const Home = () => {
             backgroundColor: "rgba(0, 0, 0, 0.2)",
           },
         }}
-        contentLabel=""
         className="w-[400px] max-h-3/4 bg-white rounded-md mx-auto mt-14 p-5"
       >
-        <AddEditNotes />
+        <AddEditNotes
+          type={openAddEditModal.type}
+          data={openAddEditModal.data}
+          getAllNotes={getAllNotes}
+          onClose={() =>
+            setOpenAddEditModal({
+              isShown: false,
+              type: "add",
+              data: null,
+            })
+          }
+        />
       </Modal>
     </>
   );
