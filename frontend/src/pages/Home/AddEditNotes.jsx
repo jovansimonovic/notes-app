@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Axios from "../../utils/axios";
 
-const AddEditNotes = ({ type, data, getAllNotes, onClose }) => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+const AddEditNotes = ({ type, noteData, getAllNotes, onClose }) => {
+  const [title, setTitle] = useState(noteData?.title || "");
+  const [content, setContent] = useState(noteData?.content || "");
   const [error, setError] = useState(null);
 
   // add note API call
@@ -27,9 +27,30 @@ const AddEditNotes = ({ type, data, getAllNotes, onClose }) => {
   };
 
   // edit note API call
-  const editNote = async () => {};
+  const editNote = async () => {
+    try {
+      const response = await Axios.put(`/note/update/${noteData._id}`, {
+        title,
+        content,
+      });
 
-  // handles add/edit note button click
+      if (response.data && response.data.note) {
+        getAllNotes();
+        onClose();
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      }
+    }
+  };
+
+  // checks if title and content are filled
+  // and handles add/edit note button click
   const handleClick = () => {
     if (!title) {
       setError("Title is required");
@@ -75,7 +96,7 @@ const AddEditNotes = ({ type, data, getAllNotes, onClose }) => {
           className="btn-primary font-medium mt-5 p-3"
           onClick={handleClick}
         >
-          Create
+          {type === "add" ? "Create" : "Update"}
         </button>
       </div>
     </div>

@@ -47,6 +47,8 @@ const Home = () => {
     }
   };
 
+  // calls provided functions
+  // when the component mounts
   useEffect(() => {
     getUser();
     getAllNotes();
@@ -58,8 +60,8 @@ const Home = () => {
   };
 
   // handles notes edit
-  const handleEdit = () => {
-    console.log("Edit");
+  const handleEdit = (noteData) => {
+    setOpenAddEditModal({ isShown: true, data: noteData, type: "edit" });
   };
 
   // handles notes delete
@@ -81,7 +83,7 @@ const Home = () => {
               content={note.content}
               isPinned={note.isPinned}
               onPin={handlePin}
-              onEdit={handleEdit}
+              onEdit={() => handleEdit(note)}
               onDelete={handleDelete}
             />
           ))}
@@ -105,7 +107,7 @@ const Home = () => {
       >
         <AddEditNotes
           type={openAddEditModal.type}
-          data={openAddEditModal.data}
+          noteData={openAddEditModal.data}
           getAllNotes={getAllNotes}
           onClose={() =>
             setOpenAddEditModal({
