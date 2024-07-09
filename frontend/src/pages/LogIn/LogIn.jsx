@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PasswordInput from "../../components/Input/PasswordInput";
 import { validateEmail } from "../../utils/helper";
 import Axios from "../../utils/axios";
+import { toast } from "react-toastify";
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
@@ -44,6 +45,7 @@ const LogIn = () => {
 
       if (response.data && response.data.accessToken) {
         localStorage.setItem("token", response.data.accessToken);
+        toast.success(response.data.message)
         navigate("/");
       }
     } catch (error) {
@@ -54,7 +56,7 @@ const LogIn = () => {
       ) {
         setError(error.response.data.message);
       } else {
-        setError("An error occurred. Please try again");
+        toast.error("Failed to log user in");
       }
     }
   };

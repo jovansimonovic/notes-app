@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PasswordInput from "../../components/Input/PasswordInput";
 import { validateEmail } from "../../utils/helper";
 import Axios from "../../utils/axios";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [username, setUsername] = useState("");
@@ -57,6 +58,7 @@ const SignUp = () => {
 
       if (response.data && response.data.accessToken) {
         localStorage.setItem("token", response.data.accessToken);
+        toast.success(response.data.message)
         navigate("/");
       }
     } catch (error) {
@@ -67,7 +69,7 @@ const SignUp = () => {
       ) {
         setError(error.response.data.message);
       } else {
-        setError("An error occurred. Please try again");
+        toast.error("Failed to register user");
       }
     }
   };

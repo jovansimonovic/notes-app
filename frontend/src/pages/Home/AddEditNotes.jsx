@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Axios from "../../utils/axios";
+import { toast } from "react-toastify";
 
 const AddEditNotes = ({ type, noteData, getAllNotes, onClose }) => {
   const [title, setTitle] = useState(noteData?.title || "");
@@ -14,6 +15,7 @@ const AddEditNotes = ({ type, noteData, getAllNotes, onClose }) => {
       if (response.data && response.data.note) {
         getAllNotes();
         onClose();
+        toast.success(response.data.message);
       }
     } catch (error) {
       if (
@@ -22,6 +24,8 @@ const AddEditNotes = ({ type, noteData, getAllNotes, onClose }) => {
         error.response.data.message
       ) {
         setError(error.response.data.message);
+      } else {
+        toast.error("Failed to create note")
       }
     }
   };
@@ -37,6 +41,7 @@ const AddEditNotes = ({ type, noteData, getAllNotes, onClose }) => {
       if (response.data && response.data.note) {
         getAllNotes();
         onClose();
+        toast.success(response.data.message)
       }
     } catch (error) {
       if (
@@ -45,6 +50,8 @@ const AddEditNotes = ({ type, noteData, getAllNotes, onClose }) => {
         error.response.data.message
       ) {
         setError(error.response.data.message);
+      } else {
+        toast.error("Failed to update note");
       }
     }
   };
