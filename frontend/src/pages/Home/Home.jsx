@@ -7,6 +7,7 @@ import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import Axios from "../../utils/axios";
 import { formatDate } from "../../utils/helper";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -47,6 +48,28 @@ const Home = () => {
     }
   };
 
+  // delete note API call
+  const deleteNote = async (noteData) => {
+    try {
+      const response = await Axios.delete(`/note/delete/${noteData._id}`);
+
+      if (response.data && response.data.message) {
+        toast.success(response.data.message);
+        getAllNotes();
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Failed to delete note");
+      }
+    }
+  };
+
   // calls provided functions
   // when the component mounts
   useEffect(() => {
@@ -64,11 +87,6 @@ const Home = () => {
     setOpenAddEditModal({ isShown: true, data: noteData, type: "edit" });
   };
 
-  // handles notes delete
-  const handleDelete = () => {
-    console.log("Delete");
-  };
-
   return (
     <>
       <Navbar user={user} />
@@ -84,7 +102,7 @@ const Home = () => {
               isPinned={note.isPinned}
               onPin={handlePin}
               onEdit={() => handleEdit(note)}
-              onDelete={handleDelete}
+              onDelete={() => deleteNote(note)}
             />
           ))}
         </div>
