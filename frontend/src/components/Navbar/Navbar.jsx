@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import { FiLogOut } from "react-icons/fi";
 
-const Navbar = ({ user }) => {
+const Navbar = ({ user, getAllNotes, searchNotes }) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -16,7 +16,7 @@ const Navbar = ({ user }) => {
 
   // handles notes search request
   const handleSearch = () => {
-    console.log(searchQuery);
+    searchQuery === "" ? getAllNotes() : searchNotes(searchQuery);
   };
 
   return (

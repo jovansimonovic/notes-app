@@ -71,6 +71,19 @@ const Home = () => {
     }
   };
 
+  // search note API call
+  const searchNotes = async (query) => {
+    try {
+      const response = await Axios.get("/note/search", {
+        params: { query },
+      });
+
+      if (response.data && response.data.notes) {
+        setNotes(response.data.notes);
+      }
+    } catch (error) {}
+  };
+
   // calls provided functions
   // when the component mounts
   useEffect(() => {
@@ -90,7 +103,7 @@ const Home = () => {
 
   return (
     <>
-      <Navbar user={user} />
+      <Navbar user={user} getAllNotes={getAllNotes} searchNotes={searchNotes} />
 
       <div className="container mx-auto">
         {notes.length > 0 ? (
