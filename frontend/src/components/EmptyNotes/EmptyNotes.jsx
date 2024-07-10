@@ -1,7 +1,7 @@
 import React from "react";
 import { RiStickyNoteAddLine } from "react-icons/ri";
 
-const EmptyNotes = ({ image, message }) => {
+const EmptyNotes = () => {
   return (
     <div className="flex flex-col justify-center items-center mt-36">
       <RiStickyNoteAddLine size={200} className="text-primary" />
