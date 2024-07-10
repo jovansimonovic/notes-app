@@ -9,7 +9,7 @@ const AddButton = ({ setOpenAddEditModal }) => {
         setOpenAddEditModal({ isShown: true, type: "add", data: null });
       }}
     >
-      <MdAdd className=" text-[32px] text-white" />
+      <MdAdd className="text-[32px] text-white" />
     </button>
   );
 };

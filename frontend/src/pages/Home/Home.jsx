@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Axios from "../../utils/axios";
 import { formatDate } from "../../utils/helper";
 import { toast } from "react-toastify";
+import EmptyNotes from "../../components/EmptyNotes/EmptyNotes";
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -92,20 +93,24 @@ const Home = () => {
       <Navbar user={user} />
 
       <div className="container mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-3 mx-4 gap-4 mt-8">
-          {notes.map((note) => (
-            <NoteCard
-              key={note._id}
-              title={note.title}
-              date={formatDate(note.createdAt)}
-              content={note.content}
-              isPinned={note.isPinned}
-              onPin={handlePin}
-              onEdit={() => handleEdit(note)}
-              onDelete={() => deleteNote(note)}
-            />
-          ))}
-        </div>
+        {notes.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-3 mx-4 gap-4 mt-8">
+            {notes.map((note) => (
+              <NoteCard
+                key={note._id}
+                title={note.title}
+                date={formatDate(note.createdAt)}
+                content={note.content}
+                isPinned={note.isPinned}
+                onPin={handlePin}
+                onEdit={() => handleEdit(note)}
+                onDelete={() => deleteNote(note)}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyNotes />
+        )}
       </div>
 
       <AddButton setOpenAddEditModal={setOpenAddEditModal} />
