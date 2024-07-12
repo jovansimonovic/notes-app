@@ -9,7 +9,7 @@ const Axios = axios.create({
   },
 });
 
-// this is the request interceptor
+// request interceptor
 // it allows modification of requests
 // before sending them to backend
 Axios.interceptors.request.use(
@@ -27,6 +27,24 @@ Axios.interceptors.request.use(
   // request configuration process
   (error) => {
     return Promise.reject(error);
+  }
+);
+
+// response interceptor
+// it allows modification of response
+// data after it arrives on frontend
+Axios.interceptors.response.use(
+  // called after the response arrives
+  (response) => {
+    return response;
+  },
+  // called if an error occurs during
+  // response configuration process
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
   }
 );
 
