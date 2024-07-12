@@ -282,7 +282,6 @@ app.put("/note/toggle-pin/:noteId", authenticateToken, async (req, res) => {
 
     return res.status(200).json({
       error: false,
-      message: "Note updated successfully",
       note: noteToUpdate,
     });
   } catch (error) {
