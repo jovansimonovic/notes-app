@@ -95,8 +95,16 @@ const Home = () => {
   }, []);
 
   // handles notes pin
-  const handlePin = () => {
-    console.log("Pin");
+  const handlePin = async (noteData) => {
+    try {
+      const response = await Axios.put(`/note/toggle-pin/${noteData._id}`, {
+        isPinned: !noteData.isPinned,
+      });
+
+      if (response.data) {
+        getAllNotes();
+      }
+    } catch (error) {}
   };
 
   // handles notes edit
@@ -118,7 +126,7 @@ const Home = () => {
                 date={formatDate(note.createdAt)}
                 content={note.content}
                 isPinned={note.isPinned}
-                onPin={handlePin}
+                onPin={() => handlePin(note)}
                 onEdit={() => handleEdit(note)}
                 onDelete={() => deleteNote(note)}
               />
