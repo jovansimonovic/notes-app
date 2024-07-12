@@ -16,8 +16,10 @@ const Home = () => {
     type: "add",
     data: null,
   });
+
   const [user, setUser] = useState(null);
   const [notes, setNotes] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
 
   // get user API call
@@ -79,6 +81,7 @@ const Home = () => {
       });
 
       if (response.data && response.data.notes) {
+        setIsSearching(true);
         setNotes(response.data.notes);
       }
     } catch (error) {}
@@ -122,7 +125,7 @@ const Home = () => {
             ))}
           </div>
         ) : (
-          <EmptyNotes />
+          <EmptyNotes isSearching={isSearching} />
         )}
       </div>
 
