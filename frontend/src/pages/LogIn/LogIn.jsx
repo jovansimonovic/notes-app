@@ -45,7 +45,7 @@ const LogIn = () => {
 
       if (response.data && response.data.accessToken) {
         localStorage.setItem("token", response.data.accessToken);
-        toast.success(response.data.message)
+        toast.success(response.data.message);
         navigate("/");
       }
     } catch (error) {
@@ -58,6 +58,8 @@ const LogIn = () => {
       } else {
         toast.error("Failed to log user in");
       }
+
+      // todo: fix bug - "user not found" error not being displayed
     }
   };
 

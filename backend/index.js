@@ -14,7 +14,9 @@ const express = require("express");
 const cors = require("cors");
 
 const jwt = require("jsonwebtoken");
-const { authenticateToken } = require("./utils");
+const { authenticateToken } = require("./utils/jwt");
+
+const { hashPassword, verifyPassword } = require("./utils/bcrypt");
 
 // creates an instance of an express app
 const app = express();
@@ -30,10 +32,6 @@ app.use(
     origin: "*",
   })
 );
-
-app.get("/", (req, res) => {
-  res.json({ data: "Hello World!" });
-});
 
 // user create API
 app.post("/user/create", async (req, res) => {
@@ -64,10 +62,12 @@ app.post("/user/create", async (req, res) => {
         .json({ error: true, message: "User already exists" });
     }
 
+    const hashedPassword = await hashPassword(password);
+
     const user = new User({
       username,
       email,
-      password,
+      password: hashedPassword,
     });
 
     await user.save();
@@ -109,7 +109,9 @@ app.post("/user/login", async (req, res) => {
     return res.status(404).json({ message: "User not found" });
   }
 
-  if (foundUser.email === email && foundUser.password === password) {
+  const isPasswordMatching = await verifyPassword(password, foundUser.password);
+
+  if (foundUser.email === email && isPasswordMatching) {
     const user = { user: foundUser };
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: "1h",
@@ -314,7 +316,7 @@ app.get("/note/search", authenticateToken, async (req, res) => {
     return res.status(200).json({
       error: false,
       notes: matchingNotes,
-    })
+    });
   } catch (error) {
     return res
       .status(500)
