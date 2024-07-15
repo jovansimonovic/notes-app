@@ -138,7 +138,7 @@ const Home = () => {
             backgroundColor: "rgba(0, 0, 0, 0.2)",
           },
         }}
-        className="w-[400px] max-h-3/4 bg-white rounded-md mx-auto mt-14 p-5"
+        className="w-[350px] sm:w-[500px] max-h-3/4 bg-white rounded-md mx-auto mt-14 p-5"
       >
         <AddEditNotes
           type={openAddEditModal.type}

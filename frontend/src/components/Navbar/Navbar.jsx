@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ProfileInfo from "../Cards/ProfileInfo";
+import ProfileButton from "../Buttons/ProfileButton";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import { FiLogOut } from "react-icons/fi";
@@ -34,7 +34,7 @@ const Navbar = ({ user, getAllNotes, searchNotes }) => {
           />
 
           <div className="flex gap-2">
-            <ProfileInfo user={user} />
+            <ProfileButton user={user} />
             <button className="btn-primary" onClick={logout}>
               <FiLogOut size={20} />
             </button>

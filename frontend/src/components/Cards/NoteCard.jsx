@@ -25,7 +25,7 @@ const NoteCard = ({
         />
       </div>
 
-      <p className="text-sm text-slate-600 mt-2">{content?.slice(0, 60)}</p>
+      <p className="text-sm text-slate-600 mt-2">{content}</p>
 
       <div className="flex items-center justify-between mt-2">
         <MdCreate className="icon-btn hover:text-primary" onClick={onEdit} />
