@@ -58,8 +58,6 @@ const LogIn = () => {
       } else {
         toast.error("Failed to log user in");
       }
-
-      // todo: fix bug - "user not found" error not being displayed
     }
   };
 

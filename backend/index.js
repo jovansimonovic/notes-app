@@ -78,7 +78,7 @@ app.post("/user/create", async (req, res) => {
 
     return res.json({
       error: false,
-      message: "Registered successfully",
+      message: "User registered successfully",
       user,
       accessToken,
     });
@@ -103,30 +103,36 @@ app.post("/user/login", async (req, res) => {
       .json({ error: true, message: "Password is required" });
   }
 
-  const foundUser = await User.findOne({ email: email });
+  try {
+    const foundUser = await User.findOne({ email: email });
 
-  if (!foundUser) {
-    return res.status(404).json({ message: "User not found" });
-  }
+    if (!foundUser) {
+      return res.status(404).json({ error: true, message: "User not found" });
+    }
 
-  const isPasswordMatching = await verifyPassword(password, foundUser.password);
+    const passwordsMatch = await verifyPassword(password, foundUser.password);
 
-  if (foundUser.email === email && isPasswordMatching) {
-    const user = { user: foundUser };
-    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "1h",
-    });
+    if (email === foundUser.email && passwordsMatch) {
+      const user = { user: foundUser };
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "1h",
+      });
 
-    return res.json({
-      error: false,
-      message: "Logged in successfully",
-      email,
-      accessToken,
-    });
-  } else {
+      return res.json({
+        error: false,
+        message: "User logged in successfully",
+        email,
+        accessToken,
+      });
+    } else {
+      return res
+        .status(401)
+        .json({ error: true, message: "Invalid email or password" });
+    }
+  } catch (error) {
     return res
-      .status(401)
-      .json({ error: true, message: "Invalid email or password" });
+      .status(500)
+      .json({ error: true, message: "Internal Server Error" });
   }
 });
 
