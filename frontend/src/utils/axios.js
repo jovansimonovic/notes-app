@@ -33,20 +33,21 @@ Axios.interceptors.request.use(
 // response interceptor
 // it allows modification of response
 // data after it arrives on frontend
-// Axios.interceptors.response.use(
-//   // called after the response arrives
-//   (response) => {
-//     return response;
-//   },
-//   // called if an error occurs during
-//   // response configuration process
-//   (error) => {
-//     if (error.response && error.response.status === 401) {
-//       localStorage.removeItem("token");
-//       window.location.href = "/login";
-//     }
-//   }
-// );
-// todo: change this interceptor to resolve 401 status conflict
+Axios.interceptors.response.use(
+  // called after the response arrives
+  (response) => {
+    return response;
+  },
+  // called if an error occurs during
+  // response configuration process
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default Axios;

@@ -46,9 +46,7 @@ const Home = () => {
       if (response.data && response.data.notes) {
         setNotes(response.data.notes);
       }
-    } catch (error) {
-      console.log("An error occurred. Please try again");
-    }
+    } catch (error) {}
   };
 
   // delete note API call
@@ -60,17 +58,7 @@ const Home = () => {
         toast.success(response.data.message);
         getAllNotes();
       }
-    } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Failed to delete note");
-      }
-    }
+    } catch (error) {}
   };
 
   // search note API call

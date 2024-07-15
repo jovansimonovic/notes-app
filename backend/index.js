@@ -126,7 +126,7 @@ app.post("/user/login", async (req, res) => {
       });
     } else {
       return res
-        .status(401)
+        .status(400)
         .json({ error: true, message: "Invalid email or password" });
     }
   } catch (error) {
