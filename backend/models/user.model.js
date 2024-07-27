@@ -6,6 +6,8 @@ const userSchema = new Schema({
   email: { type: String },
   password: { type: String },
   createdAt: { type: Date, default: Date.now },
+  resetPasswordToken: { type: String },
+  resetPasswordTokenExpires: { type: Date },
 });
 
 module.exports = mongoose.model("User", userSchema);
