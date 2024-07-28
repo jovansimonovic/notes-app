@@ -14,7 +14,7 @@ const routes = (
       <Route path="/login" exact element={<LogIn />} />
       <Route path="/signup" exact element={<SignUp />} />
       <Route path="/forgotPassword" exact element={<ForgotPassword />} />
-      <Route path="/resetPassword" exact element={<ResetPassword />} />
+      <Route path="/resetPassword/:token" exact element={<ResetPassword />} />
       <Route path="/profile" exact element={<Profile />} />
     </Routes>
   </Router>

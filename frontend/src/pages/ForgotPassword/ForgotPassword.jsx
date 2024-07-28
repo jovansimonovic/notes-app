@@ -2,13 +2,11 @@ import React, { useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import { validateEmail } from "../../utils/helper";
 import Axios from "../../utils/axios";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +32,7 @@ const ForgotPassword = () => {
       });
 
       if (response.data && response.data.message) {
-        navigate("/resetPassword");
+        toast.success(response.data.message);
       }
     } catch (error) {
       if (

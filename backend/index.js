@@ -18,6 +18,10 @@ const { authenticateToken } = require("./utils/jwt");
 
 const { hashPassword, verifyPassword } = require("./utils/bcrypt");
 
+const { generateResetPasswordToken } = require("./utils/crypto");
+
+const { sendMail } = require("./utils/SendMail");
+
 // creates an instance of an express app
 const app = express();
 
@@ -155,6 +159,45 @@ app.get("/user/get", authenticateToken, async (req, res) => {
       createdAt: foundUser.createdAt,
     },
   });
+});
+
+// forgot password API
+app.post("/user/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({
+      error: true,
+      message: "Email is required",
+    });
+  }
+
+  const foundUser = await User.findOne({ email: email });
+
+  if (!foundUser) {
+    return res.status(404).json({ error: true, message: "User not found" });
+  }
+
+  const token = generateResetPasswordToken();
+
+  foundUser.resetPasswordToken = token;
+  foundUser.resetPasswordTokenExpires = Date.now() + 600000;
+
+  await foundUser.save();
+
+  sendMail(foundUser);
+
+  return res.status(200).json({ error: false, message: "Recovery mail sent" });
+});
+
+// reset password API
+app.post("/resetPassword/:token", async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  try {
+    const foundUser = User.findOne({});
+  } catch (error) {}
 });
 
 // note create API
