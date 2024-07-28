@@ -11,7 +11,7 @@ const sendMail = async (user) => {
   });
 
   const message = {
-    from: `Notes App`,
+    from: `Notes App < ${process.env.SMTP_EMAIL} >`,
     to: user.email,
     subject: "Password Reset Request",
     text: `We've received a request to reset your password. If you didn't make this request, then please ignore this notification.\n\nOtherwise, you can reset your password using this link:\nhttp://localhost:5173/user/reset-password/${user.resetPasswordToken}`,
