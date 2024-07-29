@@ -25,7 +25,7 @@ const ForgotPassword = () => {
 
     setError("");
 
-    // reset password API call
+    // forgot password API call
     try {
       const response = await Axios.post("/user/forgot-password", {
         email: email,
@@ -45,6 +45,8 @@ const ForgotPassword = () => {
         toast.error("An unexpected error occurred");
       }
     }
+
+    // todo: come up with a way to inform user to check his gmail
   };
 
   return (

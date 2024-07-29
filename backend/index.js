@@ -193,11 +193,43 @@ app.post("/user/forgot-password", async (req, res) => {
 // reset password API
 app.post("/resetPassword/:token", async (req, res) => {
   const { token } = req.params;
-  const { password } = req.body;
+  const { newPassword } = req.body;
 
   try {
-    const foundUser = User.findOne({});
-  } catch (error) {}
+    const foundUser = await User.findOne({ resetPasswordToken: token });
+
+    if (!foundUser) {
+      return res.status(404).json({ error: true, message: "User not found" });
+    }
+
+    if (foundUser.resetPasswordTokenExpires < Date.now()) {
+      foundUser.resetPasswordToken = undefined;
+      foundUser.resetPasswordTokenExpires = undefined;
+
+      await foundUser.save();
+
+      return res
+        .status(400)
+        .json({ error: true, message: "This reset link has expired" });
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+
+    foundUser.password = hashedPassword;
+    foundUser.resetPasswordToken = undefined;
+    foundUser.resetPasswordTokenExpires = undefined;
+
+    await foundUser.save();
+
+    return res.status(200).json({
+      error: false,
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: true, message: "Internal Server Error" });
+  }
 });
 
 // note create API
@@ -230,7 +262,6 @@ app.post("/note/create", authenticateToken, async (req, res) => {
       note,
     });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       error: true,
       message: "Internal Server Error",
