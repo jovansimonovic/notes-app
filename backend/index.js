@@ -172,22 +172,30 @@ app.post("/user/forgot-password", async (req, res) => {
     });
   }
 
-  const foundUser = await User.findOne({ email: email });
+  try {
+    const foundUser = await User.findOne({ email: email });
 
-  if (!foundUser) {
-    return res.status(404).json({ error: true, message: "User not found" });
+    if (!foundUser) {
+      return res.status(404).json({ error: true, message: "User not found" });
+    }
+
+    const token = generateResetPasswordToken();
+
+    foundUser.resetPasswordToken = token;
+    foundUser.resetPasswordTokenExpires = Date.now() + 600000;
+
+    await foundUser.save();
+
+    sendMail(foundUser);
+
+    return res
+      .status(200)
+      .json({ error: false, message: "Recovery mail sent" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: true, message: "Internal Server Error" });
   }
-
-  const token = generateResetPasswordToken();
-
-  foundUser.resetPasswordToken = token;
-  foundUser.resetPasswordTokenExpires = Date.now() + 600000;
-
-  await foundUser.save();
-
-  sendMail(foundUser);
-
-  return res.status(200).json({ error: false, message: "Recovery mail sent" });
 });
 
 // reset password API
