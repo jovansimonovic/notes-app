@@ -18,6 +18,10 @@ const { authenticateToken } = require("./utils/jwt");
 
 const { hashPassword, verifyPassword } = require("./utils/bcrypt");
 
+const { generateResetPasswordToken } = require("./utils/crypto");
+
+const { sendMail } = require("./utils/SendMail");
+
 // creates an instance of an express app
 const app = express();
 
@@ -157,6 +161,77 @@ app.get("/user/get", authenticateToken, async (req, res) => {
   });
 });
 
+// forgot password API
+app.post("/user/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({
+      error: true,
+      message: "Email is required",
+    });
+  }
+
+  const foundUser = await User.findOne({ email: email });
+
+  if (!foundUser) {
+    return res.status(404).json({ error: true, message: "User not found" });
+  }
+
+  const token = generateResetPasswordToken();
+
+  foundUser.resetPasswordToken = token;
+  foundUser.resetPasswordTokenExpires = Date.now() + 600000;
+
+  await foundUser.save();
+
+  sendMail(foundUser);
+
+  return res.status(200).json({ error: false, message: "Recovery mail sent" });
+});
+
+// reset password API
+app.post("/resetPassword/:token", async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    const foundUser = await User.findOne({ resetPasswordToken: token });
+
+    if (!foundUser) {
+      return res.status(404).json({ error: true, message: "User not found" });
+    }
+
+    if (foundUser.resetPasswordTokenExpires < Date.now()) {
+      foundUser.resetPasswordToken = undefined;
+      foundUser.resetPasswordTokenExpires = undefined;
+
+      await foundUser.save();
+
+      return res
+        .status(400)
+        .json({ error: true, message: "This reset link has expired" });
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+
+    foundUser.password = hashedPassword;
+    foundUser.resetPasswordToken = undefined;
+    foundUser.resetPasswordTokenExpires = undefined;
+
+    await foundUser.save();
+
+    return res.status(200).json({
+      error: false,
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: true, message: "Internal Server Error" });
+  }
+});
+
 // note create API
 app.post("/note/create", authenticateToken, async (req, res) => {
   const { title, content } = req.body;
@@ -187,7 +262,6 @@ app.post("/note/create", authenticateToken, async (req, res) => {
       note,
     });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       error: true,
       message: "Internal Server Error",
