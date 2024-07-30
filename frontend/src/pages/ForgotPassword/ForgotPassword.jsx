@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
+  const [isRequestSent, setIsRequestSent] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +34,7 @@ const ForgotPassword = () => {
 
       if (response.data && response.data.message) {
         toast.success(response.data.message);
+        setIsRequestSent(true);
       }
     } catch (error) {
       if (
@@ -45,8 +47,6 @@ const ForgotPassword = () => {
         toast.error("An unexpected error occurred");
       }
     }
-
-    // todo: come up with a way to inform user to check his gmail
   };
 
   return (
@@ -55,21 +55,31 @@ const ForgotPassword = () => {
 
       <div className="flex justify-center items-center mt-28">
         <div className="w-96 border rounded bg-white px-7 py-10">
-          <form onSubmit={handleSubmit}>
-            <h4 className="text-2xl mb-7">Forgot Password</h4>
-            <label className="text-sm">Enter your email:</label>
-            <input
-              type="text"
-              placeholder="Email"
-              className="input-box"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            {error && <p className="text-red-500 text-sm pb-1">{error}</p>}
-            <button type="submit" className="btn-primary">
-              Send
-            </button>
-          </form>
+          {!isRequestSent ? (
+            <form onSubmit={handleSubmit}>
+              <h4 className="text-2xl mb-7">Forgot Password</h4>
+              <label className="text-sm">Enter your email:</label>
+              <input
+                type="text"
+                placeholder="Email"
+                className="input-box"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {error && <p className="text-red-500 text-sm pb-1">{error}</p>}
+              <button type="submit" className="btn-primary">
+                Send
+              </button>
+            </form>
+          ) : (
+            <>
+              <h4 className="text-2xl mb-7">Request sent</h4>
+              <p className="text-justify">
+                An email with a password reset link has been sent to your
+                registered email address. Please check your email to continue.
+              </p>
+            </>
+          )}
         </div>
       </div>
     </>
