@@ -161,6 +161,35 @@ app.get("/user/get", authenticateToken, async (req, res) => {
   });
 });
 
+// update user API
+app.put("/user/update/:userId", authenticateToken, async (req, res) => {
+  const { username, newPassword } = req.body;
+  const userId = req.params.userId;
+});
+
+// delete user API
+app.delete("/user/delete/:userId", authenticateToken, async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const foundUser = await User.findOneAndDelete({ _id: userId });
+
+    if (!foundUser) {
+      return res.status(404).json({ error: true, message: "User not found" });
+    }
+
+    // await User.deleteOne({ _id: foundUser._id });
+
+    return res
+      .status(200)
+      .json({ error: false, message: "User deleted successfully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: true, message: "Internal Server Error" });
+  }
+});
+
 // forgot password API
 app.post("/user/forgot-password", async (req, res) => {
   const { email } = req.body;
