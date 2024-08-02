@@ -29,6 +29,7 @@ const Home = () => {
 
       if (response.data && response.data.user) {
         setUser(response.data.user);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
       }
     } catch (error) {
       if (error.response.status === 401) {
