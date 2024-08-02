@@ -11,6 +11,7 @@ const Navbar = ({ user, getAllNotes, searchNotes }) => {
   // handles logout request
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
@@ -21,13 +22,24 @@ const Navbar = ({ user, getAllNotes, searchNotes }) => {
 
   return (
     <div className="bg-white flex items-center justify-between px-6 py-2 drop-shadow">
-      <h2 className="text-xl font-medium text-black py-2 pr-2">Notes</h2>
+      <div className="text-xl font-medium text-black py-2 mr-2">
+        <Link to="/" className="cursor-default">
+          <h2 className="cursor-pointer hover:drop-shadow-lg">Notes</h2>
+        </Link>
+      </div>
 
       {location.pathname === "/forgotPassword" && (
         <button className="btn-primary w-16">
           <Link to="/login">Log In</Link>
         </button>
       )}
+
+      {location.pathname === "/profile" && (
+        <button className="btn-primary w-min" onClick={logout}>
+          <FiLogOut size={20} />
+        </button>
+      )}
+
       {user && (
         <>
           <SearchBar
@@ -38,7 +50,7 @@ const Navbar = ({ user, getAllNotes, searchNotes }) => {
             handleSearch={handleSearch}
           />
 
-          <div className="flex gap-2">
+          <div className="flex gap-x-2">
             <Link to="/profile">
               <ProfileButton user={user} />
             </Link>
