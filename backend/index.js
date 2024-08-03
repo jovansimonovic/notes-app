@@ -203,11 +203,15 @@ app.delete("/user/delete/:userId", authenticateToken, async (req, res) => {
   const userId = req.params.userId;
 
   try {
-    const foundUser = await User.findOneAndDelete({ _id: userId });
+    const foundUser = await User.findById({ _id: userId });
 
     if (!foundUser) {
       return res.status(404).json({ error: true, message: "User not found" });
     }
+
+    await User.findByIdAndDelete({ _id: userId });
+
+    await Note.deleteMany({ userId: userId });
 
     return res
       .status(200)
