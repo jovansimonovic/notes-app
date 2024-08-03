@@ -178,8 +178,6 @@ app.delete("/user/delete/:userId", authenticateToken, async (req, res) => {
       return res.status(404).json({ error: true, message: "User not found" });
     }
 
-    // await User.deleteOne({ _id: foundUser._id });
-
     return res
       .status(200)
       .json({ error: false, message: "User deleted successfully" });
