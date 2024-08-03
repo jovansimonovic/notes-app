@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import Axios from "../../utils/axios";
 import { useNavigate } from "react-router-dom";
 
-const EditDeleteProfile = ({ type, userData }) => {
+const EditDeleteProfile = ({ type, userData, onClose }) => {
   const [username, setUsername] = useState(userData.username);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -43,10 +43,11 @@ const EditDeleteProfile = ({ type, userData }) => {
         // the request body only if they have values
       });
 
-      console.log(response.data); // delete after development
-
       if (response.data && response.data.message) {
+        localStorage.setItem("user", JSON.stringify(response.data.foundUser));
+        window.dispatchEvent(new Event("userChange"));
         toast.success(response.data.message);
+        onClose();
       }
     } catch (error) {
       if (
@@ -61,7 +62,7 @@ const EditDeleteProfile = ({ type, userData }) => {
     }
   };
 
-  const onDelete = async () => {
+  const handleDelete = async () => {
     try {
       const response = await Axios.delete(`/user/delete/${userData._id}`);
 
@@ -123,7 +124,7 @@ const EditDeleteProfile = ({ type, userData }) => {
           <p className="text-xl font-semibold text-center my-4">
             This action is irreversible!
           </p>
-          <button className="btn-danger" onClick={onDelete}>
+          <button className="btn-danger" onClick={handleDelete}>
             Delete
           </button>
         </>

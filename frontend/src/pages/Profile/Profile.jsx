@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import { formatDate } from "../../utils/helper";
 import Modal from "react-modal";
@@ -20,6 +20,18 @@ const Profile = () => {
   const handleDelete = (userData) => {
     setOpenEditDeleteModal({ isShown: true, data: userData, type: "delete" });
   };
+
+  useEffect(() => {
+    const handleUserChange = () => {
+      setUser(JSON.parse(localStorage.getItem("user")));
+    };
+
+    window.addEventListener("userChange", handleUserChange);
+
+    return () => {
+      window.removeEventListener("userChange", handleUserChange);
+    };
+  }, []);
 
   return (
     <>
@@ -76,6 +88,13 @@ const Profile = () => {
         <EditDeleteProfile
           type={openEditDeleteModal.type}
           userData={openEditDeleteModal.data}
+          onClose={() =>
+            setOpenEditDeleteModal({
+              isShown: false,
+              type: EditDeleteProfile,
+              data: localStorage.getItem("user"),
+            })
+          }
         />
       </Modal>
     </>
