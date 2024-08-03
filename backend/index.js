@@ -165,6 +165,37 @@ app.get("/user/get", authenticateToken, async (req, res) => {
 app.put("/user/update/:userId", authenticateToken, async (req, res) => {
   const { username, newPassword } = req.body;
   const userId = req.params.userId;
+
+  if (!username) {
+    return res
+      .status(400)
+      .json({ error: true, message: "Username is required" });
+  }
+
+  try {
+    const foundUser = await User.findById({ _id: userId });
+
+    if (!foundUser) {
+      return res.status(404).json({ error: true, message: "User not found" });
+    }
+
+    foundUser.username = username;
+
+    if (newPassword) {
+      const hashedPassword = await hashPassword(newPassword);
+      foundUser.password = hashedPassword;
+    }
+
+    await foundUser.save();
+
+    return res
+      .status(200)
+      .json({ error: false, message: "User updated successfully", foundUser });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: true, message: "Internal Server Error" });
+  }
 });
 
 // delete user API
