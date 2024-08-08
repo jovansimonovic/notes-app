@@ -34,8 +34,18 @@ const PasswordInput = ({ value, onChange, placeholder }) => {
           />
         )}
       </div>
+      {location.pathname !== "/login" && placeholder !== "Confirm Password" && (
+        <p className="text-xs text-slate-600 font-semibold">
+          Must be at least 8 characters long
+          <br />
+          Must contain at least 1 uppercase letter and 1 number
+        </p>
+      )}
       {location.pathname === "/login" && (
-        <Link to="/forgotPassword" className="text-sm text-primary font-medium underline">
+        <Link
+          to="/forgotPassword"
+          className="text-sm text-primary font-medium underline"
+        >
           Forgot Password?
         </Link>
       )}

@@ -4,6 +4,7 @@ import PasswordInput from "../../components/Input/PasswordInput";
 import Axios from "../../utils/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { validatePassword } from "../../utils/helper";
 
 const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -18,6 +19,18 @@ const ResetPassword = () => {
     // checks if newPassword field is empty
     if (!newPassword) {
       setError("Password is required");
+      return;
+    }
+
+    // checks if password is longer than 16 characters
+    if (newPassword.length > 20) {
+      setError("Password can't be longer than 20 characters");
+      return;
+    }
+
+    // checks if password meets the requirements
+    if (!validatePassword(newPassword)) {
+      setError("Invalid password");
       return;
     }
 

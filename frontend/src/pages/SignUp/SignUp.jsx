@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordInput from "../../components/Input/PasswordInput";
-import { validateEmail } from "../../utils/helper";
+import { validateEmail, validatePassword } from "../../utils/helper";
 import Axios from "../../utils/axios";
 import { toast } from "react-toastify";
 
@@ -20,6 +20,12 @@ const SignUp = () => {
     // checks if username field is empty
     if (!username) {
       setError("Username is required");
+      return;
+    }
+
+    // checks if username is at least 3 characters long
+    if (username.length < 3) {
+      setError("Username must be at least 3 characters long");
       return;
     }
 
@@ -41,6 +47,18 @@ const SignUp = () => {
       return;
     }
 
+    // checks if password is longer than 16 characters
+    if (password.length > 20) {
+      setError("Password can't be longer than 20 characters");
+      return;
+    }
+
+    // checks if password meets the requirements
+    if (!validatePassword(password)) {
+      setError("Invalid password");
+      return;
+    }
+
     setError("");
 
     // signup API call
@@ -58,7 +76,7 @@ const SignUp = () => {
 
       if (response.data && response.data.accessToken) {
         localStorage.setItem("token", response.data.accessToken);
-        toast.success(response.data.message)
+        toast.success(response.data.message);
         navigate("/");
       }
     } catch (error) {

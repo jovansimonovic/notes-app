@@ -75,8 +75,11 @@ const ForgotPassword = () => {
             <>
               <h4 className="text-2xl mb-7">Request sent</h4>
               <p className="text-justify">
-                An email with a password reset link has been sent to your
-                registered email address. Please check your email to continue.
+                An email with a password reset link has been sent to your email
+                address.
+                <br />
+                <br />
+                Please check your email to continue.
               </p>
             </>
           )}
