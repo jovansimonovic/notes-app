@@ -47,14 +47,45 @@ app.post("/user/create", async (req, res) => {
       .json({ error: true, message: "Username is required" });
   }
 
+  if (username.length < 3) {
+    return res.status(400).json({
+      error: true,
+      message: "Username must be at least 3 characters long",
+    });
+  }
+
   if (!email) {
     return res.status(400).json({ error: true, message: "Email is required" });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailRegex.test(email)) {
+    return res
+      .status(400)
+      .json({ error: true, message: "Invalid email address" });
   }
 
   if (!password) {
     return res
       .status(400)
       .json({ error: true, message: "Password is required" });
+  }
+
+  if (password.length < 8) {
+    return res.status(400).json({
+      error: true,
+      message: "Password must be at least 8 characters long",
+    });
+  }
+
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({
+      error: true,
+      message: "Password must contain at least 1 uppercase letter and 1 number",
+    });
   }
 
   try {
@@ -87,6 +118,21 @@ app.post("/user/create", async (req, res) => {
       accessToken,
     });
   } catch (error) {
+    if (error.name === "ValidationError") {
+      if (error.errors.username && error.errors.username.kind === "minlength") {
+        return res.status(400).json({
+          error: true,
+          message: "Username must be at least 3 characters long",
+        });
+      }
+
+      if (error.errors.email && error.errors.email.kind === "regexp") {
+        return res
+          .status(400)
+          .json({ error: true, message: "Invalid email address" });
+      }
+    }
+
     return res
       .status(500)
       .json({ error: true, message: "Internal Server Error" });
