@@ -1,11 +1,10 @@
 // loads .env file into process.env
 require("dotenv").config();
 
-const config = require("./config.json");
 const mongoose = require("mongoose");
 
 // establishes a connection to the database
-mongoose.connect(config.connectionString);
+mongoose.connect(process.env.MONGODB_URL);
 
 const User = require("./models/user.model");
 const Note = require("./models/note.model");
@@ -543,6 +542,6 @@ app.get("/note/search", authenticateToken, async (req, res) => {
 });
 
 // starts the server on given port
-app.listen(8000);
+app.listen(process.env.PORT);
 
 module.exports = app;
