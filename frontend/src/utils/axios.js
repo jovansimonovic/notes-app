@@ -2,7 +2,7 @@ import axios from "axios";
 
 // creates axios instance with custom configuration
 const Axios = axios.create({
-  baseURL: "https://notes-app-s2vk.onrender.com",
+  baseURL: "http://localhost:8000",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
