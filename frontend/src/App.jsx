@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import Profile from "./pages/Profile/Profile";
+import NotFound from "./pages/NotFound/NotFound";
 
 const routes = (
   <Router>
@@ -16,6 +17,7 @@ const routes = (
       <Route path="/forgotPassword" exact element={<ForgotPassword />} />
       <Route path="/resetPassword/:token" exact element={<ResetPassword />} />
       <Route path="/profile" exact element={<Profile />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   </Router>
 );
