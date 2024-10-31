@@ -2,7 +2,7 @@ import axios from "axios";
 
 // creates axios instance with custom configuration
 const Axios = axios.create({
-  baseURL: `http://localhost:${import.meta.env.VITE_PORT}`,
+  baseURL: `${import.meta.env.VITE_BASE_URL}`,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
