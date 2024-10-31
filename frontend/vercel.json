@@ -1,0 +1,8 @@
+{
+  "reqrites": [
+    {
+      "src": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
