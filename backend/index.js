@@ -32,7 +32,9 @@ app.use(express.json());
 // CORS from all origins
 app.use(
   cors({
-    origin: "*",
+    origin: ["https://notes-app-frontend-inky.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
 
