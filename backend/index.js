@@ -32,7 +32,7 @@ app.use(express.json());
 // CORS from all origins
 app.use(
   cors({
-    origin: ["https://notes-app-frontend-inky.vercel.app"],
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -335,20 +335,21 @@ app.post("/resetPassword/:token", async (req, res) => {
         .status(400)
         .json({ error: true, message: "Password is required" });
     }
-  
+
     if (newPassword.length < 8) {
       return res.status(400).json({
         error: true,
         message: "Password must be at least 8 characters long",
       });
     }
-  
+
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  
+
     if (!passwordRegex.test(newPassword)) {
       return res.status(400).json({
         error: true,
-        message: "Password must contain at least 1 uppercase letter and 1 number",
+        message:
+          "Password must contain at least 1 uppercase letter and 1 number",
       });
     }
 
