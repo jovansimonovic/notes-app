@@ -105,7 +105,7 @@ const Home = () => {
     <>
       <Navbar user={user} getAllNotes={getAllNotes} searchNotes={searchNotes} />
 
-      <div className="container mx-auto">
+      <div className="container mx-auto mb-28">
         {notes.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-3 mx-4 gap-4 mt-8">
             {notes.map((note) => (

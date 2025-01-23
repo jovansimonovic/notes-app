@@ -4,7 +4,7 @@ import { MdAdd } from "react-icons/md";
 const AddButton = ({ setOpenAddEditModal }) => {
   return (
     <button
-      className="bg-primary w-16 h-16 flex items-center justify-center rounded-full hover:bg-blue-600 absolute right-10 bottom-10"
+      className="bg-primary w-14 h-14 flex items-center justify-center rounded-full hover:bg-blue-600 fixed right-8 bottom-8"
       onClick={() => {
         setOpenAddEditModal({ isShown: true, type: "add", data: null });
       }}
